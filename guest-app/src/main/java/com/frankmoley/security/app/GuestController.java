@@ -4,6 +4,7 @@ import com.frankmoley.security.app.domain.Guest;
 import com.frankmoley.security.app.domain.GuestModel;
 import com.frankmoley.security.app.service.GuestService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class GuestController {
         return "index";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(value="/guests")
     public String getGuests(Model model){
         List<Guest> guests = this.guestService.getAllGuests();
@@ -40,11 +42,13 @@ public class GuestController {
         return "guests-view";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value="/guests/add")
     public String getAddGuestForm(Model model){
         return "guest-view";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value="/guests")
     public ModelAndView addGuest(HttpServletRequest request, Model model, @ModelAttribute GuestModel guestModel){
         Guest guest = this.guestService.addGuest(guestModel);
@@ -53,6 +57,7 @@ public class GuestController {
         return new ModelAndView("redirect:/guests/" + guest.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(value="/guests/{id}")
     public String getGuest(Model model, @PathVariable long id){
         Guest guest = this.guestService.getGuest(id);
@@ -60,6 +65,7 @@ public class GuestController {
         return "guest-view";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value="/guests/{id}")
     public String updateGuest(Model model, @PathVariable long id, @ModelAttribute GuestModel guestModel){
         Guest guest = this.guestService.updateGuest(id, guestModel);
