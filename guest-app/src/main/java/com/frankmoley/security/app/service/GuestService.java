@@ -11,8 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 /**
  * @author Frank P. Moley III.
  */
@@ -24,7 +22,11 @@ public class GuestService {
     @Value("${landon.guest.service.url}")
     private String guestServiceUrl;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public GuestService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public List<Guest> getAllGuests(){
         String url = guestServiceUrl + GUESTS;
